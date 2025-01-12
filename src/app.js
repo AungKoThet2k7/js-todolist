@@ -29,14 +29,14 @@ const createList = (currentTask) => {
   list.classList.add("list");
   list.id = "list" + Date.now();
 
-  list.innerHTML = `<div class="flex justify-between items-center border border-stone-950 p-3 mb-3">
+  list.innerHTML = `<div class="bg-stone-50 flex justify-between items-center animate__animated animate__zoomIn border border-stone-950 p-3 mb-3">
               <div class="flex gap-3 items-center">
                 <input type="checkbox" class="list-done-check accent-stone-950" />
                 <p class="font-mono text-stone-900 list-task">${currentTask}</p>
               </div>
   
               <div class="flex gap-1">
-                <button class="list-edit-btn border-[1.5px] p-[.7px] active:scale-90 active:bg-stone-200 active:duration-200 border-stone-950 disabled:opacity-20">
+                <button class="list-edit-btn border-[1.5px] p-[.7px] active:scale-90 active:bg-stone-200 active:rounded duration-200 border-stone-950 disabled:opacity-20">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -53,7 +53,7 @@ const createList = (currentTask) => {
                   </svg>
                 </button>
   
-                <button class="list-del-btn border-[1.5px] p-[.8px] active:scale-90 active:bg-stone-200 border-stone-950">
+                <button class="list-del-btn border-[1.5px] p-[.8px] active:scale-90 active:rounded active:bg-stone-200 duration-200 border-stone-950">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -120,10 +120,13 @@ const createList = (currentTask) => {
 const listDelete = (listId) => {
   const currentList = document.querySelector(`#${listId}`);
   if (window.confirm("Are you sure to delete this ?")) {
-    console.log("Deleted");
-    currentList.remove();
-    updateTaskTotal();
-    updateDoneTaskTotal();
+    currentList.className = "animate__animated animate__zoomOut";
+    currentList.addEventListener("animationend", () => {
+      console.log("Deleted");
+      currentList.remove();
+      updateTaskTotal();
+      updateDoneTaskTotal();
+    });
   }
 };
 
@@ -189,18 +192,14 @@ const listGroupHandler = (event) => {
 };
 
 const addListHandler = () => {
-  addlist(taskInput.value);
-};
-
-const taskInputHandler = (event) => {
-  if (event.key === "Enter") {
+  if (taskInput.value.trim()) {
     addlist(taskInput.value);
   }
 };
 
-const listGroupEnterHandler = (event) => {
-  if (event.key === "Enter") {
-    
+const taskInputHandler = (event) => {
+  if (event.key === "Enter" && taskInput.value.trim()) {
+    addlist(taskInput.value);
   }
 };
 
@@ -208,4 +207,3 @@ const listGroupEnterHandler = (event) => {
 addTaskBtn.addEventListener("click", addListHandler);
 listGroup.addEventListener("click", listGroupHandler);
 taskInput.addEventListener("keyup", taskInputHandler);
-listGroup.addEventListener("keyup", listGroupEnterHandler);
